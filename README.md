@@ -31,3 +31,13 @@ Before using the extension, you need to configure the **Projects Folder Path** w
     "quick-projects.ProjectsFolderPath": "/path/to/your/projects/folder",
     "quick-projects.OpenSameWindow": true
 }
+```
+
+## Keybinding
+
+You can also use the following keybinding to quickly trigger the project switching command
+
+- **Windows/Linux:** Ctrl+K, P
+- **macOs:** Cmd+K, P
+
+This keybinding is always available and will trigger the **Switch Project** command.
