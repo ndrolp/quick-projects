@@ -1,7 +1,7 @@
 {
   "name": "quick-projects",
   "displayName": "Quick Projects",
-  "description": "Quickly Swap Projects",
+  "description": "Quickly switch and create projects",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.97.0"
@@ -12,10 +12,30 @@
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
+    "configuration": {
+      "type": "object",
+      "title": "Quick Projects",
+      "properties": {
+        "quick-projects.ProjectsFolderPath":{
+          "type": "string",
+          "default": "",
+          "description": "The path to the folder containing your projects. This path will be used to list your projects."
+        },
+        "quick-projects.OpenSameWindow":{
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to open the selected project in the same window. If set to false, a new window will be opened."
+        }
+      }
+    },
     "commands": [
       {
-        "command": "quick-projects.helloWorld",
-        "title": "Hello World"
+        "command": "quick-projects.pick-projects-folder",
+        "title": "Quick Projects: Pick projects path"
+      },
+      {
+        "command": "quick-projects.switch-project",
+        "title": "Quick Projects: Open project"
       }
     ]
   },
