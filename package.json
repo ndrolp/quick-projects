@@ -1,6 +1,7 @@
 {
   "author": {"name": "ndrolp"},
   "publisher": "ndrolp",
+  "repository": "https://github.com/ndrolp/quick-projects",
   "name": "quick-projects",
   "displayName": "Quick Projects",
   "description": "Quickly switch and create projects",
