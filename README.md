@@ -5,6 +5,7 @@ QuickSwitch is a simple and efficient Visual Studio Code extension that allows y
 ## Features
 
 - **Project Selection**: Lists subfolders in a configured `Projects Folder` to choose from.
+- **Project Creation**: Create a new project on your `Projects Folder`
 - **Folder Customization**: Choose your folder path where projects are stored.
 - **Workspace Switching**: Open the selected project in the same window or a new window.
 - **Seamless Integration**: Easy-to-use command and settings for a smooth user experience.

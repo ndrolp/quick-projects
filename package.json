@@ -6,7 +6,7 @@
   "displayName": "Quick Projects",
   "description": "Quickly switch and create projects",
   "icon": "images/logo.png",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "engines": {
     "vscode": "^1.97.0"
   },
@@ -40,6 +40,10 @@
       {
         "command": "quick-projects.switch-project",
         "title": "Quick Projects: Open project"
+      },
+      {
+        "command": "quick-projects.create-project",
+        "title": "Quick Projects: Create a new project"
       }
     ],
     "keybindings": [

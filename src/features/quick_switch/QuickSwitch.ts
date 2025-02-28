@@ -7,11 +7,11 @@ import QuickProjectsConfiguration from "../../config/configuration";
 export default class QuickSwitch {
   config: QuickProjectsConfiguration = new QuickProjectsConfiguration();
 
-  private async openProject(projectPath: string){
+  private async openProject(projectPath: string) {
     await vscode.commands.executeCommand(
-        "vscode.openFolder",
-        vscode.Uri.file(projectPath),
-        !this.config.sameWindow
+      "vscode.openFolder",
+      vscode.Uri.file(projectPath),
+      !this.config.sameWindow
     );
   }
 
@@ -19,8 +19,12 @@ export default class QuickSwitch {
     if (!this.config.projectsPath) {
       return;
     }
-    const subfolders = fs.readdirSync(this.config.projectsPath, {withFileTypes: true});
-    const projects = subfolders.filter((dirent) => dirent.isDirectory()).map(folder => folder.name);
+    const subfolders = fs.readdirSync(this.config.projectsPath, {
+      withFileTypes: true,
+    });
+    const projects = subfolders
+      .filter((dirent) => dirent.isDirectory())
+      .map((folder) => folder.name);
     if (projects.length === 0) {
       vscode.window.showInformationMessage("No projects folder configured");
     }
@@ -36,5 +40,24 @@ export default class QuickSwitch {
     const projectPath = path.join(this.config.projectsPath, selectedProject);
 
     await this.openProject(projectPath);
+  }
+
+  async createProject() {
+    if (!this.config.projectsPath) {
+      return;
+    }
+
+    const newProjectName = await vscode.window.showInputBox({
+      placeHolder: "New project name",
+    });
+
+    if (!newProjectName) {
+      return;
+    }
+
+    const newProjectPath = path.join(this.config.projectsPath, newProjectName);
+    fs.mkdirSync(newProjectPath);
+
+    await this.openProject(newProjectPath);
   }
 }
