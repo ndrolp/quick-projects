@@ -19,12 +19,13 @@ export default class QuickSwitch {
     if (!this.config.projectsPath) {
       return;
     }
-    const subfolders = fs.readdirSync(this.config.projectsPath);
-    if (subfolders.length === 0) {
+    const subfolders = fs.readdirSync(this.config.projectsPath, {withFileTypes: true});
+    const projects = subfolders.filter((dirent) => dirent.isDirectory()).map(folder => folder.name);
+    if (projects.length === 0) {
       vscode.window.showInformationMessage("No projects folder configured");
     }
 
-    const selectedProject = await vscode.window.showQuickPick(subfolders, {
+    const selectedProject = await vscode.window.showQuickPick(projects, {
       placeHolder: "Select a project",
     });
 
