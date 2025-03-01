@@ -41,9 +41,11 @@
         "command": "quick-projects.switch-project",
         "title": "Quick Projects: Open project"
       },
-      {
-        "command": "quick-projects.create-project",
+      { "command": "quick-projects.create-project",
         "title": "Quick Projects: Create a new project"
+      },
+      { "command": "quick-projects.clone-project",
+        "title": "Quick Projects: Clone a project"
       }
     ],
     "keybindings": [

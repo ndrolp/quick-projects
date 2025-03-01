@@ -3,6 +3,7 @@ import * as fs from "fs";
 import * as path from "path";
 
 import QuickProjectsConfiguration from "../../config/configuration";
+import { exec } from "child_process";
 
 export default class QuickSwitch {
   config: QuickProjectsConfiguration = new QuickProjectsConfiguration();
@@ -59,5 +60,48 @@ export default class QuickSwitch {
     fs.mkdirSync(newProjectPath);
 
     await this.openProject(newProjectPath);
+  }
+
+  async cloneProject() {
+    const repoUrl = await vscode.window.showInputBox({
+      prompt: "Enter the GIT repository URL to clone",
+      placeHolder: "Repo URL",
+    });
+
+    if (!repoUrl || !this.config.projectsPath) {
+      return;
+    }
+
+    const projectName =
+      (await vscode.window.showInputBox({
+        prompt:
+          "Enter the project name, this will be the name of thje destination folder",
+        placeHolder: "Project name",
+      })) || path.basename(repoUrl, ".git");
+
+    const command = `git clone ${repoUrl} "${projectName}"`;
+
+    vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title: "Cloning project...",
+        cancellable: false,
+      },
+      async () => {
+        exec(
+          command,
+          { cwd: this.config.projectsPath },
+          (err, stdout, stderr) => {
+            if (err) {
+              vscode.window.showErrorMessage(`Git clone failed: ${stderr}`);
+            }
+            if (!this.config.projectsPath) {
+              return;
+            }
+            this.openProject(path.join(this.config.projectsPath, projectName));
+          }
+        );
+      }
+    );
   }
 }

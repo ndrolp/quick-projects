@@ -3,7 +3,7 @@ import QuickProjectsVariables from "./variables";
 
 export const CONFIG_OPTIONS = {
   projectsPath: "ProjectsFolderPath",
-  sameWindow: "OpenSameWindow"
+  sameWindow: "OpenSameWindow",
 };
 
 export default class QuickProjectsConfiguration {
@@ -12,7 +12,9 @@ export default class QuickProjectsConfiguration {
   config: vscode.WorkspaceConfiguration;
 
   constructor() {
-    this.config = vscode.workspace.getConfiguration(QuickProjectsVariables.identifier);
+    this.config = vscode.workspace.getConfiguration(
+      QuickProjectsVariables.identifier
+    );
     this.loadConfiguration();
   }
 
@@ -24,10 +26,14 @@ export default class QuickProjectsConfiguration {
   }
 
   async saveConfiguration() {
-    await this.config.update(CONFIG_OPTIONS.projectsPath, this.projectsPath, vscode.ConfigurationTarget.Global);
+    await this.config.update(
+      CONFIG_OPTIONS.projectsPath,
+      this.projectsPath,
+      vscode.ConfigurationTarget.Global
+    );
   }
 
-  async selectProjectsPath()  {
+  async selectProjectsPath() {
     const folderUri = await vscode.window.showOpenDialog({
       canSelectFolders: true,
       canSelectMany: false,
