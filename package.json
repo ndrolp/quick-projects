@@ -6,7 +6,7 @@
   "displayName": "Quick Projects",
   "description": "Quickly switch and create projects",
   "icon": "images/logo.png",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "engines": {
     "vscode": "^1.97.0"
   },
