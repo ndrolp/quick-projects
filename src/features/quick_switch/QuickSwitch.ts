@@ -4,6 +4,7 @@ import * as path from "path";
 
 import QuickProjectsConfiguration from "../../config/configuration";
 import { exec } from "child_process";
+import WslSupport from "../../utils/WslSupport";
 
 export default class QuickSwitch {
   config: QuickProjectsConfiguration = new QuickProjectsConfiguration();
@@ -11,7 +12,9 @@ export default class QuickSwitch {
   private async openProject(projectPath: string) {
     await vscode.commands.executeCommand(
       "vscode.openFolder",
-      vscode.Uri.file(projectPath),
+      WslSupport.isWslPath(projectPath)
+        ? WslSupport.parseWslUri(projectPath)
+        : vscode.Uri.file(projectPath),
       !this.config.sameWindow
     );
   }
@@ -20,9 +23,14 @@ export default class QuickSwitch {
     if (!this.config.projectsPath) {
       return;
     }
-    const subfolders = fs.readdirSync(this.config.projectsPath, {
-      withFileTypes: true,
-    });
+    let subfolders =
+      WslSupport.isInsideWSL() && WslSupport.isWslPath(this.config.projectsPath)
+        ? WslSupport.readWslProjects(this.config.projectsPath)
+        : fs.readdirSync(this.config.projectsPath, {
+            withFileTypes: true,
+          });
+
+    //const subfolders: fs.Dirent[] = [];
     const projects = subfolders
       .filter((dirent) => dirent.isDirectory())
       .map((folder) => folder.name);
@@ -79,7 +87,9 @@ export default class QuickSwitch {
         placeHolder: "Project name",
       })) || path.basename(repoUrl, ".git");
 
-    const command = `git clone ${repoUrl} "${projectName}"`;
+    const newProjectPath = path.join(this.config.projectsPath, projectName);
+
+    const command = `git clone ${repoUrl} "${newProjectPath}"`;
 
     vscode.window.withProgress(
       {
@@ -88,19 +98,15 @@ export default class QuickSwitch {
         cancellable: false,
       },
       async () => {
-        exec(
-          command,
-          { cwd: this.config.projectsPath },
-          (err, stdout, stderr) => {
-            if (err) {
-              vscode.window.showErrorMessage(`Git clone failed: ${stderr}`);
-            }
-            if (!this.config.projectsPath) {
-              return;
-            }
-            this.openProject(path.join(this.config.projectsPath, projectName));
+        exec(command, (err, _, stderr) => {
+          if (err) {
+            vscode.window.showErrorMessage(`Git clone failed: ${stderr}`);
           }
-        );
+          if (!this.config.projectsPath) {
+            return;
+          }
+          this.openProject(path.join(this.config.projectsPath, projectName));
+        });
       }
     );
   }
